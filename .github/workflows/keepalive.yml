@@ -1,0 +1,18 @@
+name: 涨停雷达盘中保活
+
+on:
+  schedule:
+    - cron: '*/5 1-3 * * 1-5'
+    - cron: '*/5 5-7 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: 请求保活接口
+        run: |
+          echo "北京时间: $(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S')"
+          RESPONSE=$(curl -sS -m 60 'https://wbapp-sg3ssomi6m8rxmre1ksjzl.app.workbuddy.host/intraday/api/keepalive?sharecode=DSQ7O2H5M3')
+          echo "接口返回: $RESPONSE"
